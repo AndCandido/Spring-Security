@@ -1,8 +1,7 @@
 package io.github.AndCandido.apispringsecurity.services;
 
-import io.github.AndCandido.apispringsecurity.entities.User;
-import io.github.AndCandido.apispringsecurity.entities.repositories.IUserRepository;
-import lombok.AllArgsConstructor;
+import io.github.AndCandido.apispringsecurity.models.User;
+import io.github.AndCandido.apispringsecurity.models.repositories.IUserRepository;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;

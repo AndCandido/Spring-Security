@@ -1,4 +1,4 @@
-package io.github.AndCandido.apispringsecurity.entities;
+package io.github.AndCandido.apispringsecurity.models;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

@@ -25,7 +25,7 @@ public class WebSecurityConfig {
             .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/public").permitAll()
-                .requestMatchers(HttpMethod.POST, "/auth/register").permitAll()
+                .requestMatchers(HttpMethod.POST, "/auth/**").permitAll()
                 .anyRequest().authenticated()
             ).addFilterBefore(appSecurityFilter, UsernamePasswordAuthenticationFilter.class);
 

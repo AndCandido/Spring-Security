@@ -1,6 +1,7 @@
 package io.github.AndCandido.apispringsecurity.security.authStrategy;
 
 import io.github.AndCandido.apispringsecurity.security.authStrategy.authStrategies.BasicAuthValidator;
+import io.github.AndCandido.apispringsecurity.security.authStrategy.authStrategies.JWTAuthValidator;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
@@ -21,7 +22,9 @@ public class AuthStrategyManager {
     }
 
     enum AuthStrategyEnum {
-        BASIC("Basic", BasicAuthValidator.class);
+
+        BASIC("Basic", BasicAuthValidator.class),
+        JWT("Bearer", JWTAuthValidator.class);
 
         private final String name;
         private final Class<? extends AuthStrategyValidator> authStrategyValidator;

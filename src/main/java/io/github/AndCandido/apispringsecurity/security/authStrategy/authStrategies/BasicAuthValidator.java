@@ -17,7 +17,7 @@ import java.util.Objects;
 @Component
 public class BasicAuthValidator implements AuthStrategyValidator {
 
-    private static final String BASIC_AUTH = "Basic ";
+    public static final String STRATEGY_AUTH = "Basic ";
     private final AuthenticationManager authenticationManager;
 
     public BasicAuthValidator(AuthenticationManager authenticationManager) {
@@ -32,7 +32,7 @@ public class BasicAuthValidator implements AuthStrategyValidator {
             UsernamePasswordAuthenticationToken authenticationToken = getCredentialsAuthToken(token);
             authenticate = authenticationManager.authenticate(authenticationToken);
         } catch (AuthenticationException ex) {
-            return AuthValidationResult.failure("User does not exist", HttpStatus.UNAUTHORIZED);
+            return AuthValidationResult.failure("Username or password is incorrect", HttpStatus.UNAUTHORIZED);
         } catch (CredentialsInvalidException ex) {
             return AuthValidationResult.failure(ex.getMessage(), HttpStatus.UNAUTHORIZED);
         }
@@ -45,7 +45,7 @@ public class BasicAuthValidator implements AuthStrategyValidator {
     }
 
     private UsernamePasswordAuthenticationToken getCredentialsAuthToken(String token) {
-        String basicAuth = token.replace(BASIC_AUTH, "");
+        String basicAuth = token.replace(STRATEGY_AUTH, "");
         String basicAuthDecoded = decodeBase64(basicAuth);
         String[] credentials = basicAuthDecoded.split(":");
 

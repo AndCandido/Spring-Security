@@ -1,6 +1,6 @@
-package io.github.AndCandido.apispringsecurity.entities.repositories;
+package io.github.AndCandido.apispringsecurity.models.repositories;
 
-import io.github.AndCandido.apispringsecurity.entities.User;
+import io.github.AndCandido.apispringsecurity.models.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.UUID;
