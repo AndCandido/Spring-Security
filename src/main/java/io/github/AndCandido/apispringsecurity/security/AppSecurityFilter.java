@@ -44,7 +44,6 @@ public class AppSecurityFilter extends OncePerRequestFilter {
         }
 
         authorizeUser(validationResult.user());
-
         filterChain.doFilter(request, response);
     }
 
