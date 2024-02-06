@@ -1,9 +1,8 @@
 package io.github.AndCandido.apispringsecurity.security.authStrategy.authStrategies;
 
+import io.github.AndCandido.apispringsecurity.exceptions.ApiAuthenticationException;
 import io.github.AndCandido.apispringsecurity.exceptions.CredentialsInvalidException;
 import io.github.AndCandido.apispringsecurity.security.authStrategy.AuthStrategyValidator;
-import io.github.AndCandido.apispringsecurity.security.authStrategy.AuthValidationResult;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -25,23 +24,15 @@ public class BasicAuthValidator implements AuthStrategyValidator {
     }
 
     @Override
-    public AuthValidationResult validate(String token) {
-        Authentication authenticate;
+    public UserDetails validate(String token) throws RuntimeException {
+        UsernamePasswordAuthenticationToken authenticationToken = getCredentialsAuthToken(token);
+        Authentication authenticate = authenticationManager.authenticate(authenticationToken);
 
-        try {
-            UsernamePasswordAuthenticationToken authenticationToken = getCredentialsAuthToken(token);
-            authenticate = authenticationManager.authenticate(authenticationToken);
-        } catch (AuthenticationException ex) {
-            return AuthValidationResult.failure("Username or password is incorrect", HttpStatus.UNAUTHORIZED);
-        } catch (CredentialsInvalidException ex) {
-            return AuthValidationResult.failure(ex.getMessage(), HttpStatus.UNAUTHORIZED);
+        if(authenticate == null || authenticate.getPrincipal() == null) {
+            throw new CredentialsInvalidException("Authentication Failure");
         }
 
-        if(authenticate == null) {
-            return AuthValidationResult.failure("Authentication Failure", HttpStatus.UNAUTHORIZED);
-        }
-
-        return AuthValidationResult.success((UserDetails) authenticate.getPrincipal());
+        return (UserDetails) authenticate.getPrincipal();
     }
 
     private UsernamePasswordAuthenticationToken getCredentialsAuthToken(String token) {

@@ -1,4 +1,4 @@
-package io.github.AndCandido.apispringsecurity.models.dtos;
+package io.github.AndCandido.apispringsecurity.dtos.req;
 
 import jakarta.validation.constraints.NotBlank;
 

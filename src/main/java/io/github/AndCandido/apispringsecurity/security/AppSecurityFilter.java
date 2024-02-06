@@ -1,8 +1,9 @@
 package io.github.AndCandido.apispringsecurity.security;
 
+import com.auth0.jwt.exceptions.TokenExpiredException;
+import io.github.AndCandido.apispringsecurity.exceptions.TokenNotAuthorized;
 import io.github.AndCandido.apispringsecurity.security.authStrategy.AuthStrategyManager;
 import io.github.AndCandido.apispringsecurity.security.authStrategy.AuthStrategyValidator;
-import io.github.AndCandido.apispringsecurity.security.authStrategy.AuthValidationResult;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -35,15 +36,17 @@ public class AppSecurityFilter extends OncePerRequestFilter {
 
         String authStrategy = getAuthStrategy(auth);
         AuthStrategyValidator authStrategyValidator = authStrategyManager.getAuthStrategyByName(authStrategy);
-        AuthValidationResult validationResult = authStrategyValidator.validate(auth);
 
-        if(!validationResult.isValid()) {
-            response.getWriter().write(validationResult.messageError());
-            response.setStatus(validationResult.statusError().value());
+        UserDetails userValidated;
+        try {
+            userValidated = authStrategyValidator.validate(auth);
+        } catch (RuntimeException ex) {
+            response.getWriter().write(ex.getMessage());
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             return;
         }
 
-        authorizeUser(validationResult.user());
+        authorizeUser(userValidated);
         filterChain.doFilter(request, response);
     }
 

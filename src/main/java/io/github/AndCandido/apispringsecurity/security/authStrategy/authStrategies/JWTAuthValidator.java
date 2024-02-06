@@ -1,10 +1,9 @@
 package io.github.AndCandido.apispringsecurity.security.authStrategy.authStrategies;
 
-import com.auth0.jwt.exceptions.JWTVerificationException;
+import com.auth0.jwt.interfaces.DecodedJWT;
+import io.github.AndCandido.apispringsecurity.exceptions.TokenNotAuthorized;
 import io.github.AndCandido.apispringsecurity.security.authStrategy.AuthStrategyValidator;
-import io.github.AndCandido.apispringsecurity.security.authStrategy.AuthValidationResult;
 import io.github.AndCandido.apispringsecurity.services.ITokenService;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
@@ -12,6 +11,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class JWTAuthValidator implements AuthStrategyValidator {
     public static final String STRATEGY_AUTH = "Bearer ";
+
     private final ITokenService tokenService;
     private final UserDetailsService userService;
 
@@ -21,23 +21,19 @@ public class JWTAuthValidator implements AuthStrategyValidator {
     }
 
     @Override
-    public AuthValidationResult validate(String requestToken) {
+    public UserDetails validate(String requestToken) throws RuntimeException {
         String token = getToken(requestToken);
-        String tokenSubject;
 
-        try {
-            tokenSubject = tokenService.validateToken(token);
-        } catch (JWTVerificationException ex) {
-            return AuthValidationResult.failure("Invalid Token", HttpStatus.UNAUTHORIZED);
-        }
+        DecodedJWT decodedToken = tokenService.validateToken(token);
+        String tokenSubject = decodedToken.getSubject();
 
         UserDetails user = userService.loadUserByUsername(tokenSubject);
 
         if(user == null) {
-            return AuthValidationResult.failure("Token not authorized", HttpStatus.UNAUTHORIZED);
+            throw new TokenNotAuthorized("Token not authorized");
         }
 
-        return AuthValidationResult.success(user);
+        return user;
     }
 
     private String getToken(String requestToken) {

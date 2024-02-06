@@ -1,7 +1,8 @@
-package io.github.AndCandido.apispringsecurity.services;
+package io.github.AndCandido.apispringsecurity.services.impl;
 
 import io.github.AndCandido.apispringsecurity.models.User;
 import io.github.AndCandido.apispringsecurity.models.repositories.IUserRepository;
+import io.github.AndCandido.apispringsecurity.services.IUserService;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -11,11 +12,11 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class UserService implements UserDetailsService, IUserService {
+public class UserServiceImpl implements UserDetailsService, IUserService {
     private final IUserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public UserService(IUserRepository userRepository, PasswordEncoder passwordEncoder) {
+    public UserServiceImpl(IUserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
     }
