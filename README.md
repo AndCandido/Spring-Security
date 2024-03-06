@@ -19,5 +19,5 @@ cd Spring-Security
 ```
 3 - Execute a aplicação
 ```bash
-./mvnw clean spring-boot:run
+mvnw clean spring-boot:run
 ```
